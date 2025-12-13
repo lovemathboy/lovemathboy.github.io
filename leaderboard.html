@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Advent of Lmbee</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-wide">
+        <header>
+            <h1>Advent of Lmbee</h1>
+            <nav>
+                <a href="index.html">[Home]</a>
+                <a href="leaderboard.html">[Leaderboard]</a>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="controls">
+                <label for="problem-select">Select Problem:</label>
+                <select id="problem-select">
+                    <option value="day13">Day 13</option>
+                    <option value="day14">Day 14</option>
+                    <option value="day15">Day 15</option>
+                    <option value="day16">Day 16</option>
+                    <option value="day17">Day 17</option>
+                    <option value="day18">Day 18</option>
+                    <option value="day19">Day 19</option>
+                    <option value="day20">Day 20</option>
+                    <option value="day21">Day 21</option>
+                    <option value="day22">Day 22</option>
+                </select>
+                <button id="refresh-btn">Refresh</button>
+            </div>
+            
+            <div id="error-message"></div>
+            
+            <div class="leaderboards">
+                <div class="leaderboard-section">
+                    <h2><span class="star">⭐</span> Part 1 - Fastest Solvers</h2>
+                    <div id="leaderboard-part1">
+                        <div class="loading">Loading...</div>
+                    </div>
+                </div>
+                
+                <div class="leaderboard-section">
+                    <h2><span class="star">⭐⭐</span> Part 2 - Fastest Solvers</h2>
+                    <div id="leaderboard-part2">
+                        <div class="loading">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="leaderboard-section">
+                    <h2>Fastest Deltas</h2>
+                    <div id="leaderboard-delta">
+                        <div class="loading">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // IMPORTANT: Configure your Google Sheets Web App URL here
+        const LEADERBOARD_URL = 'https://script.google.com/macros/s/AKfycbz9ugCG-a-UAEAhg9Ll9_LgNENLLg_N0St2JdeWv4Y8zc3SqC0KAp6rHbd4u3cvO1E/exec';
+        
+        let currentProblemId = 'day1';
+        
+        function formatTime(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds % 60}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+        
+        function getMedal(rank) {
+            if (rank === 1) return '<span class="medal">🥇</span>';
+            if (rank === 2) return '<span class="medal">🥈</span>';
+            if (rank === 3) return '<span class="medal">🥉</span>';
+            return '';
+        }
+        
+        function getRankClass(rank) {
+            if (rank === 1) return 'rank-1';
+            if (rank === 2) return 'rank-2';
+            if (rank === 3) return 'rank-3';
+            return '';
+        }
+        
+        function createLeaderboardTable(entries) {
+            if (!entries || entries.length === 0) {
+                return '<div class="empty">No submissions yet. Be the first!</div>';
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="rank">Rank</th>
+                            <th>Name</th>
+                            <th class="time">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            entries.forEach((entry, index) => {
+                const rank = index + 1;
+                const rankClass = getRankClass(rank);
+                const medal = getMedal(rank);
+                
+                html += `
+                    <tr>
+                        <td class="rank ${rankClass}">${medal}${rank}</td>
+                        <td>${escapeHtml(entry.username)}</td>
+                        <td class="time">${entry.timeFormatted}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            return html;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.innerHTML = `<div class="error">${escapeHtml(message)}</div>`;
+        }
+        
+        function clearError() {
+            document.getElementById('error-message').innerHTML = '';
+        }
+        
+        async function loadLeaderboard(problemId) {
+            if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('YOUR_GOOGLE_SHEETS')) {
+                showError('Leaderboard URL not configured. Please set up your Google Sheets backend.');
+                document.getElementById('leaderboard-part1').innerHTML = '<div class="empty">No data available</div>';
+                document.getElementById('leaderboard-part2').innerHTML = '<div class="empty">No data available</div>';
+                document.getElementById('leaderboard-delta').innerHTML = '<div class="empty">No data available</div>';
+                return;
+            }
+            
+            clearError();
+            document.getElementById('leaderboard-part1').innerHTML = '<div class="loading">Loading...</div>';
+            document.getElementById('leaderboard-part2').innerHTML = '<div class="loading">Loading...</div>';
+            document.getElementById('leaderboard-delta').innerHTML = '<div class="loading">Loading...</div>';
+            
+            try {
+                const response = await fetch(`${LEADERBOARD_URL}?problemId=${problemId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load leaderboard');
+                }
+                
+                // Update Part 1 leaderboard
+                document.getElementById('leaderboard-part1').innerHTML = createLeaderboardTable(data.part1);
+                
+                // Update Part 2 leaderboard
+                document.getElementById('leaderboard-part2').innerHTML = createLeaderboardTable(data.part2);
+
+                // update part delta
+                document.getElementById('leaderboard-delta').innerHTML = createLeaderboardTable(data.delta);
+                
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                showError('Failed to load leaderboard. Please try again later.');
+                document.getElementById('leaderboard-part1').innerHTML = '<div class="empty">Error loading data</div>';
+                document.getElementById('leaderboard-part2').innerHTML = '<div class="empty">Error loading data</div>';
+                document.getElementById('leaderboard-delta').innerHTML = '<div class="empty">Error loading data</div>';
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('problem-select').addEventListener('change', (e) => {
+            currentProblemId = e.target.value;
+            loadLeaderboard(currentProblemId);
+        });
+        
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            loadLeaderboard(currentProblemId);
+        });
+        
+        // Load initial leaderboard
+        loadLeaderboard(currentProblemId);
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            loadLeaderboard(currentProblemId);
+        }, 30000);
+    </script>
+</body>
+</html>

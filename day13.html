@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 13: Legume Plantation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Advent of Lmbee</h1>
+            <nav>
+                <a href="index.html">[Home]</a>
+                <a href="leaderboard.html">[Leaderboard]</a>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="name-section">
+                <label for="username">Enter your name (required for leaderboard):</label>
+                <input type="text" id="username" placeholder="Your name..." autocomplete="name">
+            </div>
+            
+            <h2 class="day-title">--- Day 13: Legume Plantation ---</h2>
+            
+            <article id="part1">
+                <h2>Part 1</h2>
+                <p>Your boss has decided you are now working on a bean farm, who are you to defy him</p>
+		<p>Each step, you can either plant a bean plant with a specific height</p>
+		<p>Or, you can decide to spray them with a growth fertilizer</p>
+		<p>However, the fertilizers operate in weird ways: they either increase all bean plants with <strong>even</strong> height by 1, all bean plants with <strong>odd</strong> height by 1, or <strong>all</strong> bean plants by 1
+                
+                <p>For example:</p>
+                <pre>plant 5
+spray even
+spray odd
+plant 9
+spray all
+plant 4
+spray even</pre>
+
+		<p>At the start, you have one bean plant with height 5. </p>
+		<p>The first spray does nothing, as the bean plant's height is not even. </p>
+		<p>The second spray increases the height of the bean plant to 6. </p>
+		<p>Then, you plant a second bean plant with height 9, so your bean plant heights are [6, 9] </p>
+		<p>The third spray sprays all bean plants, so your new heights are [7, 10]</p>
+		<p>You plant a new plant with height 4, so your bean plant heights are [7, 10, 4]</p>
+		<p>Then, you spray all even height plants, so your new heights are [7, 11, 5]</p>
+		<p>At the end, the total height of all bean plants is 7 + 11 + 5 + <strong>23</strong></p>
+                
+                <p>After all the actions, what is the sum of heights of all bean plants?</p>
+		<nav><a href="inputs/day13.txt">Link to input</a></nav>
+            </article>
+            
+            <div class="answer-section">
+                <h2>Part 1 Answer <span id="part1-star" class="star hidden">⭐</span></h2>
+                <form class="answer-form" id="form-part1">
+                    <input type="text" id="answer-part1" placeholder="Enter your answer..." autocomplete="off">
+                    <button type="submit">Submit</button>
+                </form>
+                <div id="message-part1"></div>
+                <div id="completion-time-part1" class="completion-time hidden"></div>
+            </div>
+            
+            <article id="part2" class="hidden">
+                <h2>Part 2</h2>
+                <p>*<i>ring ring</i>*</p>
+                
+                <p>The words “Boss” appear atop your phone screen - this can’t be good.</p>
+                <p>His anger comes through the moment you answer the call. “YOU CLOWN, WHAT ARE YOU SPRAYING OUR BEAN PLANTS WITH?”</p>
+		<p>You look at your “Fertilizer” more closely - Oh shit, it’s the Hydrochloric Acid Legume Fatalizer! Not Fertilizer!! Disaster - this type of spray instead halves the height of the corresponding bean plants (<strong>rounded down</strong>)!</p>
+		<p>i.e., "spray even" halves all even-height plants, "spray odd" halves all odd-height plants, and "spray all" halves the height of all plants!
+
+		<p>For example:</p>
+                <pre>plant 5
+spray even
+spray odd
+plant 9
+spray all
+plant 4
+spray even</pre>
+		<p>The odd spray halves [5] to [2].</p>
+		<p>Then, the all spray halves [2, 9] to [1, 4]</p>
+		<p>Then, the even spray halves [1, 4, 4] to [1, 2, 2]</p>
+		<p>Your total height of bean plants at the end is 1 + 2 + 2 = <strong>5</strong>.</p>
+
+                <p>After all the actions (with the new H.A.L.F. spray), what is the sum of heights of all bean plants?</p>
+            </article>
+            
+            <div class="answer-section hidden" id="answer-section-part2">
+                <h2>Part 2 Answer <span id="part2-star" class="star hidden">⭐</span></h2>
+                <form class="answer-form" id="form-part2">
+                    <input type="text" id="answer-part2" placeholder="Enter your answer..." autocomplete="off">
+                    <button type="submit">Submit</button>
+                </form>
+                <div id="message-part2"></div>
+                <div id="completion-time-part2" class="completion-time hidden"></div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Configuration - Update these for each problem
+        const PROBLEM_ID = 'day13';
+        const ANSWERS = {
+            part1: '87485764037410',
+            part2: '1019690398768'
+        };
+        
+        // UNLOCK TIME: Set to 5am UTC on the problem release date
+        const UNLOCK_TIME = new Date('2025-12-12T05:00:00Z');
+        
+        // IMPORTANT: Configure your Google Sheets Web App URL here
+        // Instructions: https://developers.google.com/apps-script/guides/web
+        const LEADERBOARD_URL = 'https://script.google.com/macros/s/AKfycby3t-Ab8QK_H0K_kXUj4I-64q6EMyVx3n2lINzM-nWuI2pxQb3k2YMAqL7XFq2fQ9AH/exec';
+        
+        // Alternative: Use a simple backend API endpoint
+        // const LEADERBOARD_URL = 'https://your-backend.com/api/leaderboard';
+        
+        // Check if problem is unlocked
+        function isProblemUnlocked() {
+            return Date.now() >= UNLOCK_TIME.getTime();
+        }
+        
+        // Display locked message
+        function showLockedMessage() {
+            const main = document.querySelector('main');
+            const timeRemaining = UNLOCK_TIME.getTime() - Date.now();
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            
+            main.innerHTML = `
+                <article>
+                    <h2>🔒 Problem Locked</h2>
+                    <p>This problem will be available at <strong>${UNLOCK_TIME.toLocaleString()}</strong> (3:00 AM UTC).</p>
+                    <p>Time remaining: <strong id="countdown">${hours}h ${minutes}m ${seconds}s</strong></p>
+                </article>
+            `;
+            
+            // Update countdown every second
+            const countdownInterval = setInterval(() => {
+                if (isProblemUnlocked()) {
+                    clearInterval(countdownInterval);
+                    location.reload();
+                } else {
+                    const remaining = UNLOCK_TIME.getTime() - Date.now();
+                    const h = Math.floor(remaining / (1000 * 60 * 60));
+                    const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((remaining % (1000 * 60)) / 1000);
+                    document.getElementById('countdown').textContent = `${h}h ${m}m ${s}s`;
+                }
+            }, 1000);
+        }
+        
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('username').value = username;
+            }
+            
+            const progress = localStorage.getItem(`progress_${PROBLEM_ID}`);
+            if (progress) {
+                const data = JSON.parse(progress);
+                
+                if (data.part1Complete) {
+                    document.getElementById('part1-star').classList.remove('hidden');
+                    document.getElementById('answer-part1').value = data.part1Answer || '';
+                    document.getElementById('answer-part1').disabled = true;
+                    document.getElementById('form-part1').querySelector('button').disabled = true;
+                    showMessage('part1', 'Already completed!', 'success');
+                    displayCompletionTime('part1', data.part1Time);
+                    revealPart2();
+                }
+                
+                if (data.part2Complete) {
+                    document.getElementById('part2-star').classList.remove('hidden');
+                    document.getElementById('answer-part2').value = data.part2Answer || '';
+                    document.getElementById('answer-part2').disabled = true;
+                    document.getElementById('form-part2').querySelector('button').disabled = true;
+                    showMessage('part2', 'Already completed!', 'success');
+                    displayCompletionTime('part2', data.part2Time);
+                }
+            }
+        }
+        
+        // Save progress to localStorage
+        function saveProgress(part, answer, time) {
+            let progress = {
+                part1Complete: false,
+                part2Complete: false
+            };
+            
+            const saved = localStorage.getItem(`progress_${PROBLEM_ID}`);
+            if (saved) {
+                progress = JSON.parse(saved);
+            }
+            
+            if (part === 1) {
+                progress.part1Complete = true;
+                progress.part1Answer = answer;
+                progress.part1Time = time;
+                progress.part1Timestamp = Date.now();
+            } else {
+                progress.part2Complete = true;
+                progress.part2Answer = answer;
+                progress.part2Time = time;
+                progress.part2Timestamp = Date.now();
+            }
+            
+            localStorage.setItem(`progress_${PROBLEM_ID}`, JSON.stringify(progress));
+        }
+        
+        // Send completion to leaderboard backend
+        async function sendToLeaderboard(username, part, time) {
+            // Only send if URL is configured
+            if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('YOUR_GOOGLE_SHEETS')) {
+                console.log('Leaderboard URL not configured. Would have sent:', {
+                    problemId: PROBLEM_ID,
+                    username: username,
+                    part: part,
+                    time: time,
+                    timestamp: Date.now()
+                });
+                return;
+            }
+            
+            try {
+                // Use text/plain to avoid CORS preflight
+                const response = await fetch(LEADERBOARD_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: JSON.stringify({
+                        problemId: PROBLEM_ID,
+                        username: username,
+                        part: part,
+                        time: time,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                const text = await response.text();
+                console.log('Leaderboard submission:', text);
+            } catch (error) {
+                console.error('Error submitting to leaderboard:', error);
+            }
+        }
+        
+        function showMessage(part, text, type) {
+            const msgEl = document.getElementById(`message-${part}`);
+            msgEl.textContent = text;
+            msgEl.className = `message ${type}`;
+        }
+        
+        function revealPart2() {
+            document.getElementById('part2').classList.remove('hidden');
+            document.getElementById('answer-section-part2').classList.remove('hidden');
+        }
+        
+        function formatTime(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds % 60}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+        
+        function displayCompletionTime(part, ms) {
+            const timeEl = document.getElementById(`completion-time-${part}`);
+            timeEl.textContent = `Completion time: ${formatTime(ms)}`;
+            timeEl.classList.remove('hidden');
+        }
+        
+        // Handle form submissions
+        document.getElementById('form-part1').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                showMessage('part1', 'Please enter your name first!', 'warning');
+                document.getElementById('username').focus();
+                return;
+            }
+            
+            // Save username
+            localStorage.setItem('username', username);
+            
+            const answer = document.getElementById('answer-part1').value.trim();
+            
+            if (answer === ANSWERS.part1) {
+                // Calculate time from unlock time to now
+                const completionTime = Date.now() - UNLOCK_TIME.getTime();
+                
+                document.getElementById('part1-star').classList.remove('hidden');
+                showMessage('part1', ANSWERS.part1 + ' is correct! Moving to Part 2...', 'success');
+                displayCompletionTime('part1', completionTime);
+                document.getElementById('answer-part1').disabled = true;
+                e.target.querySelector('button').disabled = true;
+                
+                saveProgress(1, answer, completionTime);
+                await sendToLeaderboard(username, 1, completionTime);
+                
+                setTimeout(revealPart2, 50);
+            } else {
+                showMessage('part1', answer + ' is incorrect. Try again!', 'error');
+            }
+        });
+        
+        document.getElementById('form-part2').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                showMessage('part2', 'Please enter your name first!', 'warning');
+                document.getElementById('username').focus();
+                return;
+            }
+            
+            const answer = document.getElementById('answer-part2').value.trim();
+            
+            if (answer === ANSWERS.part2) {
+                // Get part1 completion timestamp
+                const progress = JSON.parse(localStorage.getItem(`progress_${PROBLEM_ID}`) || '{}');
+                const part1Timestamp = progress.part1Timestamp || UNLOCK_TIME.getTime();
+                
+                // Calculate time from part1 completion to now
+		const completionTime = Date.now() - UNLOCK_TIME.getTime();
+                const deltaTime = Date.now() - part1Timestamp;
+                
+                document.getElementById('part2-star').classList.remove('hidden');
+                showMessage('part2', answer + ' is correct! Both parts complete!', 'success');
+                displayCompletionTime('part2', completionTime);
+                document.getElementById('answer-part2').disabled = true;
+                e.target.querySelector('button').disabled = true;
+                
+                saveProgress(2, answer, completionTime);
+                await sendToLeaderboard(username, 2, completionTime);
+                await sendToLeaderboard(username, 'Delta', deltaTime);
+            } else {
+                showMessage('part2', answer + ' is incorrect. Try again!', 'error');
+            }
+        });
+        
+        // Check if problem is unlocked on page load
+        if (!isProblemUnlocked()) {
+            showLockedMessage();
+        } else {
+            // Load progress on page load
+            loadProgress();
+        }
+    </script>
+</body>
+</html>
