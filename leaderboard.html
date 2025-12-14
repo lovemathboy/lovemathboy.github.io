@@ -207,10 +207,10 @@
         // Load initial leaderboard
         loadLeaderboard(currentProblemId);
         
-        // Auto-refresh every 30 seconds
+        // Auto-refresh every 5 minutes
         setInterval(() => {
             loadLeaderboard(currentProblemId);
-        }, 30000);
+        }, 300000);
     </script>
 </body>
 </html>

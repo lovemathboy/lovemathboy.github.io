@@ -12,6 +12,10 @@ body {
     padding: 20px;
 }
 
+strong {
+    color: #aaddaa;
+}
+
 .container {
     max-width: 900px;
     margin: 0 auto;
