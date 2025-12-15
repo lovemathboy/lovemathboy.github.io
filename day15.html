@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 14: Flip-Flop</title>
+    <title>Day 15: Mediocre Toys</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,33 +22,41 @@
                 <input type="text" id="username" placeholder="Your name..." autocomplete="name">
             </div>
             
-            <h2 class="day-title">--- Day 14: Flip-Flop ---</h2>
+            <h2 class="day-title">--- Day 15: Mediocre Toys ---</h2>
             
             <article id="part1">
                 <h2>Part 1</h2>
-                <p>Your boss has given you a circuit made up of flip-flops. Each flip-flop receives a signal as input and has two possible outputs.</p>
-		        <p>Each signal sent to a flip-flop will cause it to alternate outputs. I.e. when a flip-flop first receives a signal, it will forward the signal to the first output. When the flip-flop receives the next signal, it will forward the signal to the second output, and so on. Each flip-flop is also given a 3-letter code name in lowercase.</p>
-		        <p>You operate an input terminal labeled INP. There are two output terminals: OUT and BIN. Every signal will eventually end up at OUT (and is processed by some magical machine) or BIN (and thrown away). Your boss tasks you with finding out <strong>how many signals get sent to OUT after sending 123456 signals out of INP.</strong>
-</p>
-		        <p><strong>It is guaranteed that this circuit does not contain any cycles.</strong></p>
-                
-                <p>Example Input:</p>
-                <pre>INP: abc
-abc: def ghi
-def: OUT ghi
-ghi: OUT BIN</pre>
+                <p>Today, your boss has put you in charge of receiving and distributing toys.</p>
 
-                <p>If you send 6 signals out of INP.</p>
-                <p>The 1st signal goes INP → abc → def → OUT
-                <br>The 2nd signal goes INP → abc → ghi → OUT
-                <br>The 3rd signal goes INP → abc → def → ghi → BIN
-                <br>The 4th signal goes INP → abc → ghi → OUT
-                <br>The 5th signal goes INP → abc → def → OUT
-                <br>The 6th signal goes INP → abc → ghi → BIN</p>
-                <p>A total of <strong>4</strong> signals goes to OUT.</p>
-                
-                <p><strong>How many signals get sent to OUT after sending 123456 signals out of INP?</strong></p>
-		<nav><a href="inputs/day14.txt">Link to input</a></nav>
+<p>There are two things that happen throughout the day:</p>
+<p>1: You receive a toy in a box labeled with a number. This number denotes the quality of the toy.</p>
+<p>2: You receive a request for a toy. As a beacon of mediocrity, you will always give away the <strong>median</strong> toy in terms of quality. In the case where you have an even number of toys, you will give away the <strong>larger of the two “median”</strong> toy in terms of quality.</p>
+
+<p>For the i-th request (where i starts at 1), denote <strong>x</strong> as the quality of the toy given for the i-th request. The satisfaction score for that request is <strong>i * x</strong>.</p>
+
+<p>Your task is to determine the sum of satisfaction scores for all requests throughout the day.</p>
+
+<p>Example Input:</p>
+<pre>receive 4
+receive 9
+receive 2
+receive 9
+request
+request
+receive 99999
+request
+request</pre>
+<p>After the first 4 lines, your toy quality line-up is [2, 4, 9, 9]
+<br>For the first request, the higher median is 9. Your new toy line-up is [2, 4, 9]
+<br>For the second request, the median is 4. Your new toy line-up is [2, 9]
+<br>Then, you receive a toy with quality 99999. Your new toy line-up is [2, 9, 99999]
+<br>For the third request, the median is 9. Your new toy line-up is [2, 99999]
+<br>For the last request, the higher median is 99999.</p>
+<p>The total satisfaction score is <strong>1×9 + 2×4 + 3×9 + 4×99999 = 400040</strong></p>
+
+<p><strong>What is the sum of satisfaction scores for all requests throughout the day?</strong></p>
+
+		<nav><a href="inputs/day15.txt">Link to input</a></nav>
             </article>
             
             <div class="answer-section">
@@ -65,16 +73,31 @@ ghi: OUT BIN</pre>
                 <h2>Part 2</h2>
                 <p>*<i>ring ring</i>*</p>
                 
-                <p>The familiar 4 letters of “Boss” appear atop your phone screen once again.</p>
-                <p>You reluctantly answer the phone.</p>
-		        <p>“WHY IS THE ANSWER SO SMALL, ARE YOU SENDING THE RIGHT NUMBER OF SIGNALS??”</p>
-		        <p>You took a closer look at the number of signals you need to send out:</p>
-                <p><strong>12<sup>3456</sup></strong>. Uh oh! It seems you were off by a few signals – better get to work!</p>
-
-		        <p>Since the answer is very large, report the <strong>last 15 digits</strong> of the number of signals sent to OUT.</p>
-		        <p>For the example input above, if you send 12<sup>3456</sup> signals out of INP, the last 15 digits of the number of signals sent to OUT is <strong>660414548213760</strong>.</p>
+                <p>You're getting a sense of déjà vu looking at your phone screen.</p>
+                <p>Unfortunately, not answering the phone is not an option...</p>
+		        <p>“WHERE DID ALL OUR TOYS GO, ARE YOU SENDING ENTIRE BOXES OF TOYS??”</p>
+		        <p>You take a peek inside the box labeled "4" - there are 4 toys inside!</p>
+                <p>You take a look to your right - you eye a suspiciously large box labeled "99999"</p>
+		        <p>It seems whenever you receive x, you actually receive <strong>x copies of x</strong> quality toys!</p>
+		        <p>For the example input:</p>
+                <pre>receive 4
+receive 9
+receive 2
+receive 9
+request
+request
+receive 99999
+request
+request</pre>
+<p>After the first 4 lines, your toy quality line-up is [2, 2, 4, 4, 4, 4, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+<br>For the first request, the higher median is 9. 
+<br>For the second request, the median is 9.
+<br>Then, you receive 99999 toys with quality 99999. Your new toy line-up is [2, 2, 4, 4, 4, 4, 9, ..., 9, 99999, ..., 99999]
+<br>For the third request, the median is 99999. 
+<br>For the last request, the higher median is 99999.</p>
+<p>The total satisfaction score is <strong>1×9 + 2×9 + 3×99999 + 4×99999 = 700020</strong></p>
 		        
-                <p><strong>What is the last 15 digits of the number of signals sent to OUT in the actual circuit if you send 12<sup>3456</sup> signals out of INP?</strong></p>
+                <p><strong>What is the sum of satisfaction scores for all requests throughout the day?</strong></p>
             </article>
             
             <div class="answer-section hidden" id="answer-section-part2">
@@ -91,14 +114,14 @@ ghi: OUT BIN</pre>
     
     <script>
         // Configuration - Update these for each problem
-        const PROBLEM_ID = 'day14';
+        const PROBLEM_ID = 'day15';
         const ANSWERS = {
-            part1: '75292',
-            part2: '824149222686720'
+            part1: '82548913169553421',
+            part2: '181256043161563369'
         };
         
         // UNLOCK TIME: Set to 5am UTC on the problem release date
-        const UNLOCK_TIME = new Date('2025-12-14T05:00:00Z');
+        const UNLOCK_TIME = new Date('2025-12-15T05:00:00Z');
         
         // IMPORTANT: Configure your Google Sheets Web App URL here
         // Instructions: https://developers.google.com/apps-script/guides/web
