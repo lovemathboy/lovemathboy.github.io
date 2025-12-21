@@ -1,0 +1,267 @@
+User 1:
+Favorite Digit: 3
+Favorite Number: 9
+
+User 2:
+Favorite Digit: 2
+Favorite Number: 6
+
+User 3:
+Favorite Digit: 3
+Favorite Number: 5
+
+User 4:
+Favorite Digit: 3
+Favorite Number: 7
+
+User 5:
+Favorite Digit: 7
+Favorite Number: 2
+
+User 6:
+Favorite Digit: 6
+Favorite Number: 5
+
+User 7:
+Favorite Digit: 6
+Favorite Number: 2
+
+User 8:
+Favorite Digit: 6
+Favorite Number: 7
+
+User 9:
+Favorite Digit: 9
+Favorite Number: 9
+
+User 10:
+Favorite Digit: 5
+Favorite Number: 9
+
+User 11:
+Favorite Digit: 0
+Favorite Number: 1
+
+User 12:
+Favorite Digit: 0
+Favorite Number: 3
+
+User 13:
+Favorite Digit: 0
+Favorite Number: 4
+
+User 14:
+Favorite Digit: 0
+Favorite Number: 5
+
+User 15:
+Favorite Digit: 0
+Favorite Number: 2
+
+User 16:
+Favorite Digit: 6
+Favorite Number: 1
+
+User 17:
+Favorite Digit: 1
+Favorite Number: 1
+
+User 18:
+Favorite Digit: 5
+Favorite Number: 1
+
+User 19:
+Favorite Digit: 7
+Favorite Number: 1
+
+User 20:
+Favorite Digit: 2
+Favorite Number: 1
+
+User 21:
+Favorite Digit: 1
+Favorite Number: 3362
+
+User 22:
+Favorite Digit: 5
+Favorite Number: 4822
+
+User 23:
+Favorite Digit: 6
+Favorite Number: 3387
+
+User 24:
+Favorite Digit: 4
+Favorite Number: 3021
+
+User 25:
+Favorite Digit: 3
+Favorite Number: 3510
+
+User 26:
+Favorite Digit: 2
+Favorite Number: 2311
+
+User 27:
+Favorite Digit: 0
+Favorite Number: 1730
+
+User 28:
+Favorite Digit: 2
+Favorite Number: 2139
+
+User 29:
+Favorite Digit: 4
+Favorite Number: 4715
+
+User 30:
+Favorite Digit: 8
+Favorite Number: 3844
+
+User 31:
+Favorite Digit: 9
+Favorite Number: 3072
+
+User 32:
+Favorite Digit: 2
+Favorite Number: 1420
+
+User 33:
+Favorite Digit: 7
+Favorite Number: 1750
+
+User 34:
+Favorite Digit: 4
+Favorite Number: 886
+
+User 35:
+Favorite Digit: 8
+Favorite Number: 3033
+
+User 36:
+Favorite Digit: 0
+Favorite Number: 123
+
+User 37:
+Favorite Digit: 0
+Favorite Number: 4710
+
+User 38:
+Favorite Digit: 1
+Favorite Number: 1954
+
+User 39:
+Favorite Digit: 0
+Favorite Number: 653
+
+User 40:
+Favorite Digit: 2
+Favorite Number: 4178
+
+User 41:
+Favorite Digit: 0
+Favorite Number: 2106
+
+User 42:
+Favorite Digit: 8
+Favorite Number: 3072
+
+User 43:
+Favorite Digit: 7
+Favorite Number: 2803
+
+User 44:
+Favorite Digit: 1
+Favorite Number: 2963
+
+User 45:
+Favorite Digit: 2
+Favorite Number: 171
+
+User 46:
+Favorite Digit: 4
+Favorite Number: 1462
+
+User 47:
+Favorite Digit: 2
+Favorite Number: 645
+
+User 48:
+Favorite Digit: 4
+Favorite Number: 3152
+
+User 49:
+Favorite Digit: 5
+Favorite Number: 2132
+
+User 50:
+Favorite Digit: 6
+Favorite Number: 4306
+
+User 51:
+Favorite Digit: 4
+Favorite Number: 4099
+
+User 52:
+Favorite Digit: 8
+Favorite Number: 1725
+
+User 53:
+Favorite Digit: 2
+Favorite Number: 127
+
+User 54:
+Favorite Digit: 0
+Favorite Number: 1474
+
+User 55:
+Favorite Digit: 4
+Favorite Number: 266
+
+User 56:
+Favorite Digit: 6
+Favorite Number: 3869
+
+User 57:
+Favorite Digit: 0
+Favorite Number: 4000
+
+User 58:
+Favorite Digit: 7
+Favorite Number: 2111
+
+User 59:
+Favorite Digit: 0
+Favorite Number: 1906
+
+User 60:
+Favorite Digit: 5
+Favorite Number: 3903
+
+User 61:
+Favorite Digit: 3
+Favorite Number: 1397
+
+User 62:
+Favorite Digit: 9
+Favorite Number: 2138
+
+User 63:
+Favorite Digit: 3
+Favorite Number: 3500
+
+User 64:
+Favorite Digit: 7
+Favorite Number: 2758
+
+User 65:
+Favorite Digit: 2
+Favorite Number: 2968
+
+User 66:
+Favorite Digit: 1
+Favorite Number: 4194
+
+User 67:
+Favorite Digit: 2
+Favorite Number: 4442
