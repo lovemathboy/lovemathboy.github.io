@@ -28,7 +28,7 @@
                 <h2>Part 1</h2>
                 <p>It's Sunday, which means your boss has assigned you a simple task: connecting outlets on a power grid!</p>
                 <p>You're given multiple square grids of '#' and '.'s, where '#' represents an obstacle and '.' represents an empty cell.</p>
-                <p>On each square grid, there are two outlet 'O's, find the minimum number of '.'s you need to convert to 'O's such that every 'O' is one connected region!</p>
+                <p>On each square grid, there are two outlet 'O's, find the minimum number of '.'s you need to convert to 'O's such that every 'O' forms one orthogonally connected region!</p>
                 <p><strong>There are multiple square grids in the input</strong>, the final answer is the <strong>product of the number of conversions you need</strong></p>
 
 <p>Example Input:</p>
@@ -58,7 +58,7 @@
 #O#<strong>O</strong>#
 #<strong>O</strong>#<strong>O</strong>#
 #<strong>OOO</strong>#
-##..#
+##.##
 </pre>
 <p>The final answer is <strong>3 * 6 = 18</strong></p>
 <p><strong>What is the product of the number of '.' to 'O' conversions in every grid in your input?</strong></p>
@@ -78,14 +78,14 @@
             
             <article id="part2" class="hidden">
                 <h2>Part 2</h2>
-                <p>Phew, what an easy Sunday problem, surely it can't get harder, right?</p>
+                <p>Phew, what an easy Sunday problem, surely it can't get much harder, right?</p>
                 <p>*<i>ring ring</i>*</p>
                 <p>Uhhhhh...</p>
                 <p>"WHY ARE YOU WORKING WITH MULTIPLE GRIDS? THERE'S ONLY ONE GRID CUBE!"</p>
 		        <p><strong>There's only one grid WHAT?</strong></p>
-		        <p>The 6 grids in your input actually represents the <strong>6 difference faces of a cube</strong></p>
+		        <p>The 6 grids in your input actually represents the <strong>6 different faces of a cube</strong></p>
                 <p>The task remains the same - <strong>find the minimum number of '.' to 'O' conversions to make all 'O's one singular connected region!</strong></p>
-                <p>You may <strong>rotate</strong>, but <strong>not flip</strong> the grids in the construction of the cube. Determine the minimum answer among <strong>all possible cube constructions.</strong></p>
+                <p>You may <strong>rotate</strong>, but <strong>not flip</strong> the grids in the construction of the cube. Determine the <strong>minimum number of conversions among all possible cube constructions.</strong></p>
 
 <p>Example Input:</p>
 <pre>#####
@@ -143,7 +143,7 @@
 
 <p>You need <strong>10</strong> '.' to 'O' conversions to connect all the 'O's</p>
 
-<p><strong>Determine the minimum number of '.' to 'O' conversions to make ALL 'O' connected, among all possible cube constructions!</strong></p>
+<p><strong>Determine the minimum number of '.' to 'O' conversions to make ALL 'O's connected, among all possible cube constructions!</strong></p>
             </article>
             
             <div class="answer-section hidden" id="answer-section-part2">
