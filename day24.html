@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 24: Pyramid</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Advent of Lmbee</h1>
+            <nav>
+                <a href="index.html">[Home]</a>
+                <a href="leaderboard.html">[Leaderboard]</a>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="name-section">
+                <label for="username">Enter your name (required for leaderboard):</label>
+                <input type="text" id="username" placeholder="Your name..." autocomplete="name">
+            </div>
+            
+            <h2 class="day-title">--- Day 24: Pyramid ---</h2>
+            
+            <article id="part1">
+                <h2>Part 1</h2>
+                <p>Your boss is restructuring the company, and has come up with a brand new never-before seen hierarchy known as the Pyramid Scheme.</p>
+                <p>At the bottom layer, every employee has a value.</p>
+                <p>For every layer above the bottom, each "manager" is in change of the two people directly below them. Denote these people as <strong>Person A</strong> and <strong>Person B</strong></p>
+                <p>The value of a "manager" is equal to <strong>max(Value<sub>Person A</sub>, Value<sub>Person B</sub>) + 1</strong>, because managers obviously add value to Pyramid Schemes</p>
+                <p>Your boss has tasked you to determine the sum of values of everyone in the pyramid!</p>
+
+<p>Example Input:</p>
+<pre>
+4 9 2 7 9
+</pre>
+
+<p>The pyramid is constructed as follows:</p>
+
+<img src="images/day24_1.png" alt="Part 1 Example Input" width="627" height="208">
+
+<p>The sum of value of everyone in the pyramid is <strong>139</strong>.</p>
+
+<p><strong>What is the sum of the value of everyone in your input?</strong></p>
+
+		<nav><a href="inputs/day24.txt">Link to input</a></nav>
+            </article>
+            
+            <div class="answer-section">
+                <h2>Part 1 Answer <span id="part1-star" class="star hidden">⭐</span></h2>
+                <form class="answer-form" id="form-part1">
+                    <input type="text" id="answer-part1" placeholder="Enter your answer..." autocomplete="off">
+                    <button type="submit">Submit</button>
+                </form>
+                <div id="message-part1"></div>
+                <div id="completion-time-part1" class="completion-time hidden"></div>
+            </div>
+            
+            <article id="part2" class="hidden">
+                <h2>Part 2</h2>
+                <p>*<i>ring ring</i>*</p>
+                <p>Yea of course it isn't this simple.</p>
+                <p>"HEY, OUR COMPANY HAS WAY MORE PEOPLE THAN THAT!"</p>
+		        <p>It seems the input is compressed via the following mechanism:</p>
+                <p>- Group the input into groups of 5, denote each integer in a group of 5 as <strong>(initial, b, c, mod, n)</strong></p>
+                <p>- The next n values in the bottom row of the pyramid are:</p>
+                <p>- <strong>a<sub>1</sub> = initial</strong></p>
+                <p>- <strong>a<sub>i</sub> = (b * a<sub>i-1</sub> + c) % mod, 2 ≤ i ≤ n</strong></p>
+                <p>- It is guaranteed initial < mod</p>
+		        <p>Your task remains the same - determine the sum of everyone's value in the pyramid!</p>
+
+<p>Example Input:</p>
+<pre>
+4 9 2 7 9 1 2 3 61 5
+</pre>
+
+<p>The input should be grouped into two groups of 5: (4 9 2 7 9) and (1 2 3 61 5), which decodes into the following bottom pyramid layer:</p>
+<pre>4 3 1 4 3 1 4 3 1 5 13 29 0</pre>
+<p>The sum of this pyramid is <strong>1618</strong></p>
+
+<p><strong>Determine the sum of everyone's value, after decompressing the input!</strong></p>
+            </article>
+            
+            <div class="answer-section hidden" id="answer-section-part2">
+                <h2>Part 2 Answer <span id="part2-star" class="star hidden">⭐</span></h2>
+                <form class="answer-form" id="form-part2">
+                    <input type="text" id="answer-part2" placeholder="Enter your answer..." autocomplete="off">
+                    <button type="submit">Submit</button>
+                </form>
+                <div id="message-part2"></div>
+                <div id="completion-time-part2" class="completion-time hidden"></div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Configuration - Update these for each problem
+        const PROBLEM_ID = 'day24';
+        const ANSWERS = {
+            part1: '13948707050',
+            part2: '8783628093237420033'
+        };
+        
+        // UNLOCK TIME: Set to 5am UTC on the problem release date
+        const UNLOCK_TIME = new Date('2025-12-24T05:00:00Z');
+        
+        // IMPORTANT: Configure your Google Sheets Web App URL here
+        // Instructions: https://developers.google.com/apps-script/guides/web
+        const LEADERBOARD_URL = 'https://script.google.com/macros/s/AKfycby3t-Ab8QK_H0K_kXUj4I-64q6EMyVx3n2lINzM-nWuI2pxQb3k2YMAqL7XFq2fQ9AH/exec';
+        
+        // Alternative: Use a simple backend API endpoint
+        // const LEADERBOARD_URL = 'https://your-backend.com/api/leaderboard';
+        
+        // Check if problem is unlocked
+        function isProblemUnlocked() {
+            return Date.now() >= UNLOCK_TIME.getTime();
+        }
+        
+        // Display locked message
+        function showLockedMessage() {
+            const main = document.querySelector('main');
+            const timeRemaining = UNLOCK_TIME.getTime() - Date.now();
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            
+            main.innerHTML = `
+                <article>
+                    <h2>🔒 Problem Locked</h2>
+                    <p>This problem will be available at <strong>${UNLOCK_TIME.toLocaleString()}</strong> (5:00 AM UTC).</p>
+                    <p>Time remaining: <strong id="countdown">${hours}h ${minutes}m ${seconds}s</strong></p>
+                </article>
+            `;
+            
+            // Update countdown every second
+            const countdownInterval = setInterval(() => {
+                if (isProblemUnlocked()) {
+                    clearInterval(countdownInterval);
+                    location.reload();
+                } else {
+                    const remaining = UNLOCK_TIME.getTime() - Date.now();
+                    const h = Math.floor(remaining / (1000 * 60 * 60));
+                    const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((remaining % (1000 * 60)) / 1000);
+                    document.getElementById('countdown').textContent = `${h}h ${m}m ${s}s`;
+                }
+            }, 1000);
+        }
+        
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('username').value = username;
+            }
+            
+            const progress = localStorage.getItem(`progress_${PROBLEM_ID}`);
+            if (progress) {
+                const data = JSON.parse(progress);
+                
+                if (data.part1Complete) {
+                    document.getElementById('part1-star').classList.remove('hidden');
+                    document.getElementById('answer-part1').value = data.part1Answer || '';
+                    document.getElementById('answer-part1').disabled = true;
+                    document.getElementById('form-part1').querySelector('button').disabled = true;
+                    showMessage('part1', 'Already completed!', 'success');
+                    displayCompletionTime('part1', data.part1Time);
+                    revealPart2();
+                }
+                
+                if (data.part2Complete) {
+                    document.getElementById('part2-star').classList.remove('hidden');
+                    document.getElementById('answer-part2').value = data.part2Answer || '';
+                    document.getElementById('answer-part2').disabled = true;
+                    document.getElementById('form-part2').querySelector('button').disabled = true;
+                    showMessage('part2', 'Already completed!', 'success');
+                    displayCompletionTime('part2', data.part2Time);
+                }
+            }
+        }
+        
+        // Save progress to localStorage
+        function saveProgress(part, answer, time) {
+            let progress = {
+                part1Complete: false,
+                part2Complete: false
+            };
+            
+            const saved = localStorage.getItem(`progress_${PROBLEM_ID}`);
+            if (saved) {
+                progress = JSON.parse(saved);
+            }
+            
+            if (part === 1) {
+                progress.part1Complete = true;
+                progress.part1Answer = answer;
+                progress.part1Time = time;
+                progress.part1Timestamp = Date.now();
+            } else {
+                progress.part2Complete = true;
+                progress.part2Answer = answer;
+                progress.part2Time = time;
+                progress.part2Timestamp = Date.now();
+            }
+            
+            localStorage.setItem(`progress_${PROBLEM_ID}`, JSON.stringify(progress));
+        }
+        
+        // Send completion to leaderboard backend
+        async function sendToLeaderboard(username, part, time) {
+            // Only send if URL is configured
+            if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('YOUR_GOOGLE_SHEETS')) {
+                console.log('Leaderboard URL not configured. Would have sent:', {
+                    problemId: PROBLEM_ID,
+                    username: username,
+                    part: part,
+                    time: time,
+                    timestamp: Date.now()
+                });
+                return;
+            }
+            
+            try {
+                // Use text/plain to avoid CORS preflight
+                const response = await fetch(LEADERBOARD_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: JSON.stringify({
+                        problemId: PROBLEM_ID,
+                        username: username,
+                        part: part,
+                        time: time,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                const text = await response.text();
+                console.log('Leaderboard submission:', text);
+            } catch (error) {
+                console.error('Error submitting to leaderboard:', error);
+            }
+        }
+        
+        function showMessage(part, text, type) {
+            const msgEl = document.getElementById(`message-${part}`);
+            msgEl.textContent = text;
+            msgEl.className = `message ${type}`;
+        }
+        
+        function revealPart2() {
+            document.getElementById('part2').classList.remove('hidden');
+            document.getElementById('answer-section-part2').classList.remove('hidden');
+        }
+        
+        function formatTime(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds % 60}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+        
+        function displayCompletionTime(part, ms) {
+            const timeEl = document.getElementById(`completion-time-${part}`);
+            timeEl.textContent = `Completion time: ${formatTime(ms)}`;
+            timeEl.classList.remove('hidden');
+        }
+        
+        // Handle form submissions
+        document.getElementById('form-part1').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                showMessage('part1', 'Please enter your name first!', 'warning');
+                document.getElementById('username').focus();
+                return;
+            }
+            
+            // Save username
+            localStorage.setItem('username', username);
+            
+            const answer = document.getElementById('answer-part1').value.trim();
+            
+            if (answer === ANSWERS.part1) {
+                // Calculate time from unlock time to now
+                const completionTime = Date.now() - UNLOCK_TIME.getTime();
+                
+                document.getElementById('part1-star').classList.remove('hidden');
+                showMessage('part1', ANSWERS.part1 + ' is correct! Moving to Part 2...', 'success');
+                displayCompletionTime('part1', completionTime);
+                document.getElementById('answer-part1').disabled = true;
+                e.target.querySelector('button').disabled = true;
+                
+                saveProgress(1, answer, completionTime);
+                await sendToLeaderboard(username, 1, completionTime);
+                
+                setTimeout(revealPart2, 50);
+            } else {
+                showMessage('part1', answer + ' is incorrect. Try again!', 'error');
+            }
+        });
+        
+        document.getElementById('form-part2').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                showMessage('part2', 'Please enter your name first!', 'warning');
+                document.getElementById('username').focus();
+                return;
+            }
+            
+            const answer = document.getElementById('answer-part2').value.trim();
+            
+            if (answer === ANSWERS.part2) {
+                // Get part1 completion timestamp
+                const progress = JSON.parse(localStorage.getItem(`progress_${PROBLEM_ID}`) || '{}');
+                const part1Timestamp = progress.part1Timestamp || UNLOCK_TIME.getTime();
+                
+                // Calculate time from part1 completion to now
+		const completionTime = Date.now() - UNLOCK_TIME.getTime();
+                const deltaTime = Date.now() - part1Timestamp;
+                
+                document.getElementById('part2-star').classList.remove('hidden');
+                showMessage('part2', answer + ' is correct! Both parts complete!', 'success');
+                displayCompletionTime('part2', completionTime);
+                document.getElementById('answer-part2').disabled = true;
+                e.target.querySelector('button').disabled = true;
+                
+                saveProgress(2, answer, completionTime);
+                await sendToLeaderboard(username, 2, completionTime);
+                await sendToLeaderboard(username, 'Delta', deltaTime);
+            } else {
+                showMessage('part2', answer + ' is incorrect. Try again!', 'error');
+            }
+        });
+        
+        // Check if problem is unlocked on page load
+        if (!isProblemUnlocked()) {
+            showLockedMessage();
+        } else {
+            // Load progress on page load
+            loadProgress();
+        }
+    </script>
+</body>
+</html>
